@@ -14,17 +14,19 @@
     h3,p {
         margin: 0;
     }
-    .precio {
-        color: $verde;
-        font-weight: $bold;
-        font-size: 3rem;
-    }
+}
+
+.precio {
+    color: $verde;
+    font-weight: $bold;
+    font-size: 3rem;
 }
 
 .iconos-caracteristicas {
     display: flex;
     list-style: none;
     padding: 0;
+    max-width: 40rem;
 
     li {
         flex: 1; //cada uno recibe 1 px de loq  hay disponoble para q midan lo mismo
