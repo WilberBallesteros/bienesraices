@@ -1,0 +1,42 @@
+@include tablet {
+    .contenedor-anuncios {
+        @include grid(3, 2rem);
+    }
+}
+.anuncio {
+    background-color: lighten( $gris, 5); //aclarar el gris
+    border: 1px solid darken( $gris, 10);
+
+    .contenido-anuncio {
+        padding: 2rem;
+    }
+
+    h3,p {
+        margin: 0;
+    }
+    .precio {
+        color: $verde;
+        font-weight: $bold;
+        font-size: 3rem;
+    }
+}
+
+.iconos-caracteristicas {
+    display: flex;
+    list-style: none;
+    padding: 0;
+
+    li {
+        flex: 1; //cada uno recibe 1 px de loq  hay disponoble para q midan lo mismo
+        display: flex;
+        gap: 1rem;
+    }
+
+    img {
+        flex: 0 0 4rem; //iconos peuqños y de igual tamaño masomneos
+        //margin-right: 1rem;
+    }
+    p {
+        font-weight: $black;
+    }
+}
