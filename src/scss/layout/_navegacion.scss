@@ -1,13 +1,40 @@
+.derecha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include tablet {
+        align-items: flex-end;
+    }
+
+    .dark-mode-boton {
+        width: 3rem;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        filter: invert(100%); //cambia el color del icono de la luna de negro a blanco
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        @include tablet {
+            margin-top: 0;
+        }
+    }
+}
+
 .barra {
     display: flex;
     flex-direction: column;
-    align-items: center; /*centar el icono haburguesa*/
     padding-top: 3rem;
+    align-items: center; /*centar el icono haburguesa*/
 
     @include tablet {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end; 
+
+
         img {  /*mostrar el logo bienes raices en firefox*/
             margin-top: 2rem;           
             width: 30rem;            
@@ -25,7 +52,8 @@
 
     visibility: hidden; /*no aparece la navegacion en mobile*/
     opacity: 0; //transparencia
-    transition: visibility .3s ease-in-out, opacity 0.5s linear;
+    height: 0; //cuando esta el menu hamburguesa no quede con un altura fija q es grande y se ve feo
+    transition: visibility .3s ease-in-out, opacity 0.5s linear, height 0.5s linear;
    
     a {
         color: $blanco;
@@ -69,4 +97,5 @@
 .mostrar {
   visibility: visible; //q se vea la navegacion
   opacity: 1;
+  height: auto; //altura con el menu desplegado
 }
