@@ -1,14 +1,31 @@
 .barra {
     display: flex;
     flex-direction: column;
+    align-items: center; /*centar el icono haburguesa*/
     padding-top: 3rem;
+
     @include tablet {
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
+        img {  /*mostrar el logo bienes raices en firefox*/
+            margin-top: 2rem;           
+            width: 30rem;            
+            height: auto;   
+        } 
+    }
+    img {             /*mostrar el logo bienes raices en firefox*/
+        margin-top: 2rem;
+        width: 30rem;            
+        height: auto;    
     }
 }
 
 .navegacion {
+
+    visibility: hidden; /*no aparece la navegacion en mobile*/
+    opacity: 0; //transparencia
+    transition: visibility .3s ease-in-out, opacity 0.5s linear;
    
     a {
         color: $blanco;
@@ -33,5 +50,23 @@
     @include tablet {
         display: flex;
         align-items: center;
+        opacity: 1;
+        visibility: visible;
     }
+}
+
+/**menu hamburguesa**/
+.mobile-menu {
+    @include tablet {
+        display: none;
+    }
+
+    img {
+        width: 5rem;
+    }
+}
+
+.mostrar {
+  visibility: visible; //q se vea la navegacion
+  opacity: 1;
 }
