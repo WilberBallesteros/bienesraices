@@ -1,8 +1,8 @@
 .no-webp .inicio {
-    background-image: url(../../../build/img/header.jpg);
+    background-image: url('../img/header.jpg');
 }
 .webp .inicio {
-    background-image: url(../../../build/img/header.webp);
+    background-image: url('../img/header.webp');
 }
 .header {
     background-color: $grisOscuro;
