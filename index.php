@@ -1,41 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienes Raices</title>
-    <link rel="stylesheet" href="/bienesraices/build/css/app.css">
-</head>
-<body>
-    
-    <header class="header inicio">
-        <div class="contenedor contenido-header">
-            <div class="barra">
-                <a href="/">
-                    <img src="build/img/logo.svg" alt="logotipo de Bienes Raices">
-                </a>
-
-                <!--menu hamburguesa-->
-                <div class="mobile-menu">
-                    <img src="build/img/barras.svg" alt="icono menu responsive">
-                </div>
-
-                <div class="derecha">
-                    <img class="dark-mode-boton" src="build/img/dark-mode.svg" alt="icono dark mode">
-                    <nav class="navegacion">
-                        <a href="nosotros.html">Nosotros</a>
-                        <a href="anuncios.html">Anuncios</a>
-                        <a href="blog.html">Blog</a>
-                        <a href="contacto.html">Contacto</a>
-                    </nav>
-                </div>
-
-                
-            </div> <!--.barra-->
-
-            <h1>Venta de Casas y Apartamentos Exclusivos de Lujo</h1>
-        </div>
-    </header>
+<?php
+    require 'includes/funciones.php';
+    incluirTemplate('header', $inicio = true);
+?>
 
     <main class="contenedor seccion">
         <h1>Más Sobre Nosotros</h1>
@@ -228,20 +194,6 @@
         </section>
     </div>
 
-    <footer class="footer seccion">
-        <div class="contenedor contenedor-footer">
-            <nav class="navegacion">
-                <a href="nosotros.html">Nosotros</a>
-                <a href="anuncios.html">Anuncios</a>
-                <a href="blog.html">Blog</a>
-                <a href="contacto.html">Contacto</a>
-            </nav>
-        </div>
-
-        <p class="copyright">Todos los derechos reservados 2023 &copy;</p>
-    </footer>
-
-
-    <script src="/bienesraices/build/js/bundle.min.js"></script>
-</body>
-</html>
+<?php
+    incluirTemplate('footer');
+?>
