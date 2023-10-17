@@ -1,5 +1,13 @@
 <?php
 
+require '../includes/funciones.php';
+    //solo el admin pueda ingresar, autenticacion
+    $auth = estaAutenticado();
+
+    if (!$auth) {
+        header('Location: /bienesraices/');
+    }
+
     //importar la base de datos
 
     //1. importar conexion
@@ -40,7 +48,6 @@
     }
 
     //incluye un template
-    require '../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

@@ -1,27 +1,37 @@
 <?php
-//base de datos
-require '../../includes/config/database.php';
 
-$db = conectarDB();
 
-//consultar para obtener los vendedores
+    require '../../includes/funciones.php';
+    //solo el admin pueda ingresar, autenticacion
+    $auth = estaAutenticado();
 
-$consulta = "SELECT * FROM vendedores";
-$resultado = mysqli_query($db, $consulta); //base de datos y consulta q traemos
+    if (!$auth) {
+        header('Location: /bienesraices/');
+    }
 
-//Arreglo con mensaje de errores
-$errores = [];
+    //base de datos
+    require '../../includes/config/database.php';
 
-$titulo = '';
-$precio = '';
-$descripcion = '';
-$habitaciones = '';
-$wc = '';
-$estacionamiento = '';
-$vendedoresId = '';
+    $db = conectarDB();
 
-//ejecutar el codigo despues de que el usuario envía el formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //consultar para obtener los vendedores
+
+    $consulta = "SELECT * FROM vendedores";
+    $resultado = mysqli_query($db, $consulta); //base de datos y consulta q traemos
+
+    //Arreglo con mensaje de errores
+    $errores = [];
+
+    $titulo = '';
+    $precio = '';
+    $descripcion = '';
+    $habitaciones = '';
+    $wc = '';
+    $estacionamiento = '';
+    $vendedoresId = '';
+
+    //ejecutar el codigo despues de que el usuario envía el formulario
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
@@ -121,8 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-
-require '../../includes/funciones.php';
 incluirTemplate('header');
 ?>
 

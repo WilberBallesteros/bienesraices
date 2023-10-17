@@ -1,5 +1,13 @@
 <?php
 
+    require '../../includes/funciones.php';
+    //solo el admin pueda ingresar, autenticacion
+    $auth = estaAutenticado();
+
+    if (!$auth) {
+        header('Location: /bienesraices/');
+    }
+
     //validar la URL por ID válido
     $id = $_GET['id'];
     $id = filter_var($id, FILTER_VALIDATE_INT); //valida q sea un int
@@ -145,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-require '../../includes/funciones.php';
+
 incluirTemplate('header');
 ?>
 
