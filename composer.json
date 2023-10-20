@@ -1,0 +1,17 @@
+{
+    "name": "wilbe/bienesraices",
+    "description": "creando un proyecto con POO",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Wilber Ballesteros",
+            "email": "ballestas01@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+        "psr-4": {
+            "App\\" : "./classes"
+        }
+    }
+}

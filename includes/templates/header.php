@@ -38,7 +38,7 @@
                         <a href="/bienesraices/contacto.php">Contacto</a>
                         <?php if($auth): ?>
                             <a href="/bienesraices/admin">Administrar</a>
-                            <a href="/bienesraices/cerrar-sesion.php">Cerrar Sesión</a>
+                            <a href="/bienesraices/cerrar-sesion.php">Cerrar Sesió n</a>
                         <?php endif; ?>
                     </nav>
                 </div>

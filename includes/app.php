@@ -1,4 +1,15 @@
 <?php
 
-define('TEMPLATES_URL', __DIR__ . '/templates'); /* entramos a esta carpeta*/
-define('FUNCIONES_URL', __DIR__ . 'funciones.php');
+//va a llamar funciones y clases
+
+require 'funciones.php';
+require 'config/database.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\Propiedad;
+
+$propiedad = new Propiedad;
+
+//var_dump($propiedad);
+
+

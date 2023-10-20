@@ -8,7 +8,8 @@
     }
 
     //1.importar la conexion
-    require 'includes/config/database.php'; //ESTE ES LO MISMO QUE EL DE DIR
+    //require 'includes/config/database.php'; //ESTE ES LO MISMO QUE EL DE DIR  ya no se necesita por app composer
+    require 'includes/app.php';
     $db = conectarDB();
 
     //2.consultar la bd
@@ -27,8 +28,6 @@
     $propiedad = mysqli_fetch_assoc($resultado) ; //como solo es un resultado q no se itera se usa mysqli_fetch_assoc
 
 
-
-    require 'includes/funciones.php';
     incluirTemplate('header');
 ?>
 
