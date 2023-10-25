@@ -1,6 +1,6 @@
 <?php
 
-require '../includes/funciones.php';
+require '../includes/app.php';
     //solo el admin pueda ingresar, autenticacion
     $auth = estaAutenticado();
 
@@ -11,7 +11,7 @@ require '../includes/funciones.php';
     //importar la base de datos
 
     //1. importar conexion
-    require '../includes/config/database.php';
+    //require '../includes/config/database.php';
     $db = conectarDB();
 
     //2. escribir el query

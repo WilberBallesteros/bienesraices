@@ -1,17 +1,14 @@
 <?php
 
+    require '../../includes/app.php';
 
-    require '../../includes/funciones.php';
+    use App\Propiedad;
+    use Intervention\Image\ImageManagerStatic as Image;
+
     //solo el admin pueda ingresar, autenticacion
-    $auth = estaAutenticado();
-
-    if (!$auth) {
-        header('Location: /bienesraices/');
-    }
+    estaAutenticado();
 
     //base de datos
-    require '../../includes/config/database.php';
-
     $db = conectarDB();
 
     //consultar para obtener los vendedores
@@ -20,7 +17,8 @@
     $resultado = mysqli_query($db, $consulta); //base de datos y consulta q traemos
 
     //Arreglo con mensaje de errores
-    $errores = [];
+    $errores = Propiedad::getErrores();
+    
 
     $titulo = '';
     $precio = '';
@@ -33,95 +31,38 @@
     //ejecutar el codigo despues de que el usuario envía el formulario
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-
-
-    // echo "<pre>";
-    // var_dump($_POST); //INFORMACION DE TIPO POST EN EL FORMULARIO
-    // echo "</pre>";
-
-        // echo "<pre>";
-    // var_dump($_FILES); //CONTENIDO DE LOS ARCHIVOS
-    // echo "</pre>";
-
-    $titulo = mysqli_real_escape_string($db, $_POST['titulo']); //el q esta en verde es el q viene del name del formulario
-    $precio = mysqli_real_escape_string($db, $_POST['precio']); //mysqli_real_escape_string es una funcion para q no hagan inyeccion sql, q sean numeros o strings segun sea necesario
-    $descripcion = mysqli_real_escape_string($db, $_POST['descripcion']);
-    $habitaciones = mysqli_real_escape_string($db, $_POST['habitaciones']);
-    $wc = mysqli_real_escape_string($db, $_POST['wc']);
-    $estacionamiento = mysqli_real_escape_string($db,  $_POST['estacionamiento']);
-    $vendedoresId = mysqli_real_escape_string($db, $_POST['vendedor']);
-    $creado = date('Y/m/d') ;
-
-    //Asignar files hacia una variable
-    $imagen = $_FILES['imagen'];
-
-    //validar si escribieron si no manda al arreglo de errores
-    if (!$titulo) {
-        $errores[] = "Debes añadir un titulo"; //añade el error al final del arreglo
-    }
-
-    if (!$precio) {
-        $errores[] = "El Precio es obligatorio";
-    }
-
-    if (strlen($descripcion) < 50) {
-        $errores[] = "La Descripcion es obligatoria, y debe tener al menos 50 caracteres";
-    }
-
-    if (!$habitaciones) {
-        $errores[] = "El numero de habitaciones es obligatorio";
-    }
-
-    if (!$wc) {
-        $errores[] = "El numero de Baños es obligatorio";
-    }
-
-    if (!$estacionamiento) {
-        $errores[] = "El numero de estacionamiento es obligatorio";
-    }
-
-    if (!$vendedoresId) {
-        $errores[] = "Elige un vendedor";
-    }
-
-    if (!$imagen['name'] || $imagen['error']) {
-        $errores[] = 'la imagen es obligatoria';
-    }
-    
-    //validar por tamaño (maximo una mega)
-    $medida = 1000 * 1000;
-
-    if ($imagen['size'] > $medida) {
-        $errores[] = 'La imagen es muy pesada';
-    }
-
-    //revisar que el arreglo de errores esté vacio, si esta inserta en bd si no, no
-    if (empty($errores)) {
+        /** Crea una nueva instancia **/
+        $propiedad = new Propiedad($_POST);
 
         /**SUBIDA DE ARCHIVOS()IMAGENES**/
         
-        //crear una carpeta
-        $carpetaImagenes = '../../imagenes/';
-
-        if (!is_dir($carpetaImagenes)) { //si una carpeta existe o no
-            mkdir($carpetaImagenes);
-        }
-
         //generar un nombre unico
         $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg"; //hashear
 
-        //subir la imagen 
-        move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
+        //setear la imagen
+        //realiza un resize a la imagen con intervention (imagen en memoria)
+        if ($_FILES['imagen']['tmp_name']) {
+            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800,600); //00 ancho, 600 alto
+            $propiedad->setImage($nombreImagen);
+        }
 
+        //validar imagen
+        $errores = $propiedad->validar();
 
-        //Insertar en la base de datos
-        $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado,
-            vendedores_id) VALUES ( '$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedoresId' ) ";
+    if (empty($errores)) {
 
-        //echo $query; //probar el query
+        //crear la carpeta para subir imagenes
+        if (!is_dir(CARPETA_IMAGENES)) {
+            mkdir(CARPETA_IMAGENES);
+        }
 
-        $resultado = mysqli_query($db, $query);
+        //guarda la imagen en el servidor
+        $image->save(CARPETA_IMAGENES . $nombreImagen);
 
+        //guarda en la base de datos
+        $resultado = $propiedad->guardar();
+
+        //mensaje de exito o error
         if ($resultado) {
             //erdireccionar al usuario (como el formulario queda lleno evitar q lo envien cada rato x q creen q no paso )
             //echo "Insertado correctamente";
@@ -179,7 +120,7 @@ incluirTemplate('header');
         <fieldset>
             <legend>Vendedor</legend>
 
-            <select name="vendedor">
+            <select name="vendedores_id">
                 <option value="">-- Seleccione --</option>
                 <?php while ($vendedor = mysqli_fetch_assoc($resultado)) { ?>
 
