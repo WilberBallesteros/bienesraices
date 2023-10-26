@@ -2,6 +2,8 @@
 
 namespace App;
 
+use GuzzleHttp\Psr7\Query;
+
 class Propiedad {
 
     //base de datos
@@ -38,7 +40,7 @@ class Propiedad {
         $this->wc = $args['wc'] ?? '';
         $this->estacionamiento = $args['estacionamiento'] ?? '';
         $this->creado = date('Y/m/d');
-        $this->vendedores_id = $args['vendedores_id'] ?? '';
+        $this->vendedores_id = $args['vendedores_id'] ?? 1;
     }
 
     public function guardar() {
@@ -138,8 +140,46 @@ class Propiedad {
     }
     
     return self::$errores;
+ } 
 
+//lista todas las propiedades
+public static function all() {
+    $query = "SELECT * FROM propiedades";
+
+    $resultado = self::consultarSQL($query);
+
+    return $resultado;
     
- }
+}
+
+public static function consultarSQL($query) {
+    //consultar la base de datos
+    $resultado = self::$db->query($query);
+
+    //iterar los resultados
+    $array = [];
+    while($registro = $resultado->fetch_assoc()) {
+        $array[] = self::crearObjeto($registro);
+    }
+
+
+    //liberar la memoria
+    $resultado->free();
+
+    //retornar los resultados
+    return $array;
+}
+
+    protected static function crearObjeto($registro) {
+        $objeto = new self; //una nueva propiedad de la clase padre Propiedad una nueva instancia
+
+        foreach ($registro as $key => $value) {
+            if (property_exists($objeto, $key)) { //comparar el objeto q estoy creando si tiene el id, mapea los datos de arreglos hacia objetos q se quedan en memoria 
+                $objeto->$key = $value;
+            }
+        }
+
+        return $objeto;
+    }
 
 }

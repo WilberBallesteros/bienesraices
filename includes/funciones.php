@@ -25,3 +25,9 @@ function debuguear($variable) {
     echo "</pre>";
     exit;
 }
+
+//escapa / sanitizar el HTML hacerlo siempre en todos los proyectos para evitar inyeccion sql
+function s($html) : string {
+    $s = htmlspecialchars($html);
+    return $s;
+}
