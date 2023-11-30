@@ -44,6 +44,16 @@ class Propiedad {
     }
 
     public function guardar() {
+        if (isset($this->id)) {
+            //actualizar
+            $this->actualizar();
+        } else {
+            //creando un nuevo registro
+            $this->crear();
+        }
+    }
+
+    public function crear() {
 
         //sanitizar la entrada de los datos
         $atributos = $this->sanitizarAtributos();
@@ -66,6 +76,30 @@ class Propiedad {
 
         $resultado = self::$db->query($query);
         return $resultado;
+    }
+
+    public function actualizar() {
+        //sanitizar la entrada de los datos
+        $atributos = $this->sanitizarAtributos();
+
+        $valores = [];
+        foreach ($atributos as $key => $value) {
+            $valores[] = "{$key}='{$value}'";
+        }
+
+        $query = "UPDATE propiedades SET "; 
+        $query .=  join(', ', $valores );
+        $query .= "WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " LIMIT 1 ";
+
+        $resultado = self::$db->query($query); //este codigo siempre q interactue con la BD
+
+        if ($resultado) {
+            //erdireccionar al usuario (como el formulario queda lleno evitar q lo envien cada rato x q creen q no paso )
+            //echo "Insertado correctamente";
+            header('Location: /bienesraices/admin?resultado=2'); //no debe haber nada de html previo para redireccionar(usar poco)
+        }
+        
     }
 
     //itera sobre $columnasDB, identificar y unir los atributos de la BD
@@ -93,6 +127,15 @@ class Propiedad {
 
     // subida de archivos
     public function setImage($imagen) {
+        //elimina la imagen previa
+        if (isset ($this->id) ) {
+            //comprobar si existe el archibo
+            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+            if ($existeArchivo) {
+                unlink(CARPETA_IMAGENES . $this->imagen);  //si lo encuentra elimina el archivo
+            }
+        }
+
         //asignar al atributo de Imagen el nombre de la imagen
         if ($imagen) {
             $this->imagen = $imagen; //imagen q le vamos a pasar cuando llamemos este metodo
@@ -142,14 +185,20 @@ class Propiedad {
     return self::$errores;
  } 
 
-//lista todas las propiedades
+//lista todas las propiedades(registros)
 public static function all() {
     $query = "SELECT * FROM propiedades";
-
     $resultado = self::consultarSQL($query);
-
     return $resultado;
     
+}
+
+//busca un registro por su id
+public static function find($id) {
+    $query = "SELECT * FROM propiedades WHERE id = $id";
+
+    $resultado = self::consultarSQL($query);
+    return array_shift($resultado);  //retorna el primer elemento de una arreglo xq todo esta en la q posicion del arreglo como un objeto
 }
 
 public static function consultarSQL($query) {
@@ -180,6 +229,16 @@ public static function consultarSQL($query) {
         }
 
         return $objeto;
+    }
+
+    //sincronizxa el objeto en memoria con los cambios realizados por el usuario
+    //leer todo el post leer todo el objeto q esta en memoria mapeanto titulo con titulo,etc, y reescribiendo las nuevas q el usuario puso actualizando
+    public function sincronizar( $args = [] ) {
+        foreach ($args as $key => $value) {
+            if (property_exists($this, $key) && !is_null($value) ) { //revisa de un objeto q una propiedad o atributo exista 
+                $this->$key = $value;
+            }
+        }
     }
 
 }

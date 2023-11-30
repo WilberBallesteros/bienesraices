@@ -25,7 +25,9 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /** Crea una nueva instancia **/
-        $propiedad = new Propiedad($_POST);
+        $propiedad = new Propiedad($_POST['propiedad']); //los atributos del formulario estan en un arreglo propiedad
+
+        //debuguear($_FILES['propiedad']);
 
         /**SUBIDA DE ARCHIVOS()IMAGENES**/
         
@@ -34,8 +36,8 @@
 
         //setear la imagen
         //realiza un resize a la imagen con intervention (imagen en memoria)
-        if ($_FILES['imagen']['tmp_name']) {
-            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800,600); //00 ancho, 600 alto
+        if ($_FILES['propiedad']['tmp_name']['imagen']) {
+            $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800,600); //00 ancho, 600 alto
             $propiedad->setImage($nombreImagen);
         }
 
