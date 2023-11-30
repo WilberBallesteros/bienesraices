@@ -27,8 +27,6 @@
         /** Crea una nueva instancia **/
         $propiedad = new Propiedad($_POST['propiedad']); //los atributos del formulario estan en un arreglo propiedad
 
-        //debuguear($_FILES['propiedad']);
-
         /**SUBIDA DE ARCHIVOS()IMAGENES**/
         
         //generar un nombre unico
@@ -55,14 +53,9 @@
         $image->save(CARPETA_IMAGENES . $nombreImagen);
 
         //guarda en la base de datos
-        $resultado = $propiedad->guardar();
+        $propiedad->guardar();
 
-        //mensaje de exito o error
-        if ($resultado) {
-            //erdireccionar al usuario (como el formulario queda lleno evitar q lo envien cada rato x q creen q no paso )
-            //echo "Insertado correctamente";
-            header('Location: /bienesraices/admin?resultado=1'); //no debe haber nada de html previo para redireccionar(usar poco)
-        }
+        
     }
 }
 

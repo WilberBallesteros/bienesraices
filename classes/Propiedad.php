@@ -32,7 +32,7 @@ class Propiedad {
 
     public function __construct($args = []) 
     {
-        $this->titulo = $args['titulo'] ?? '';  //?? '' en caso de q no este el titulo q lo pase vacio
+        $this->titulo = $args['titulo'] ?? null;  //?? '' en caso de q no este el titulo q lo pase vacio
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
@@ -44,7 +44,7 @@ class Propiedad {
     }
 
     public function guardar() {
-        if (isset($this->id)) {
+        if (!is_null($this->id)) {
             //actualizar
             $this->actualizar();
         } else {
@@ -75,7 +75,12 @@ class Propiedad {
         //debuguear($query);  //queda todo el script de insert into ... completo
 
         $resultado = self::$db->query($query);
-        return $resultado;
+        //mensaje de exito o error
+        if ($resultado) {
+            //erdireccionar al usuario (como el formulario queda lleno evitar q lo envien cada rato x q creen q no paso )
+            //echo "Insertado correctamente";
+            header('Location: /bienesraices/admin?resultado=1'); //no debe haber nada de html previo para redireccionar(usar poco)
+        }
     }
 
     public function actualizar() {
@@ -98,6 +103,20 @@ class Propiedad {
             //erdireccionar al usuario (como el formulario queda lleno evitar q lo envien cada rato x q creen q no paso )
             //echo "Insertado correctamente";
             header('Location: /bienesraices/admin?resultado=2'); //no debe haber nada de html previo para redireccionar(usar poco)
+        }
+        
+    }
+
+    //Eliminar un registro
+    public function eliminar() {
+        //eliminar la propiedad
+        //escapo para q no pongan codigo malicioso de inyeccion sql
+        $query = "DELETE FROM propiedades WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1"; 
+        $resultado = self::$db->query($query);
+
+        if ($resultado) {
+            $this->borrarImagen();
+            header('Location: /bienesraices/admin?resultado=3');
         }
         
     }
@@ -128,18 +147,23 @@ class Propiedad {
     // subida de archivos
     public function setImage($imagen) {
         //elimina la imagen previa
-        if (isset ($this->id) ) {
-            //comprobar si existe el archibo
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-            if ($existeArchivo) {
-                unlink(CARPETA_IMAGENES . $this->imagen);  //si lo encuentra elimina el archivo
-            }
+        if ( !is_null($this->id ) ) {
+            $this->borrarImagen();
         }
 
         //asignar al atributo de Imagen el nombre de la imagen
         if ($imagen) {
             $this->imagen = $imagen; //imagen q le vamos a pasar cuando llamemos este metodo
         }
+    }
+
+    //Eliminar imagen archivo
+    public function borrarImagen() {
+       //comprobar si existe el archibo
+       $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+       if ($existeArchivo) {
+           unlink(CARPETA_IMAGENES . $this->imagen);  //si lo encuentra elimina el archivo
+       };
     }
 
     // validacion
