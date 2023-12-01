@@ -5,11 +5,13 @@
     estaAutenticado();
 
     use App\Propiedad;
+    use App\Vendedor;
 
     $db = conectarDB();
 
     //implementar un metodo para obtener todas las propiedades usando ACTIVE RECORD
     $propiedades = Propiedad::all();
+    $vendedores = Vendedor::all();
 
     //Muestra mensaje condicional
     $resultado = $_GET['resultado'] ?? null; //si no existe resultado le pone null, http://localhost/bienesraices/admin/   en esta ruta no sale ningun error por q no encuentra resultado
