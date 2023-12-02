@@ -3,20 +3,16 @@
     require '../../includes/app.php';
 
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as Image;
 
     //solo el admin pueda ingresar, autenticacion
     estaAutenticado();
 
-    //base de datos
-    $db = conectarDB();
-
     $propiedad = new Propiedad; //para tener el objeto $propiedad totalmente vacio
 
-    //consultar para obtener los vendedores
-
-    $consulta = "SELECT * FROM vendedores";
-    $resultado = mysqli_query($db, $consulta); //base de datos y consulta q traemos
+    //consulta para obtener todos los vendedores
+    $vendedores = Vendedor::all();
 
     //Arreglo con mensaje de errores
     $errores = Propiedad::getErrores();
@@ -55,7 +51,6 @@
         //guarda en la base de datos
         $propiedad->guardar();
 
-        
     }
 }
 

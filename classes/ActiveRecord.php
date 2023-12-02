@@ -10,12 +10,9 @@ class ActiveRecord {
     protected static $tabla = '';
 
     // errores o validaciones
-    protected static $errores = [];
+    protected static $errores = []; //se heredan tanto a Propiedad como a Vendedor para q cada clase tenga sus metodos de validacion de manera independiente, sus mensajes de error sean diferentes y tales
 
-
-   
-
-     //definir la conexion a la BD
+     //definir la conexion a la BD, self lo dejamos en todo lo relacionado a BD
     public static function setDB($database) {
         self::$db = $database;  //self hace referencia a los atributos estaticos de la misma clase
     }
@@ -70,7 +67,7 @@ class ActiveRecord {
 
         $query = "UPDATE " . static::$tabla . " SET "; 
         $query .=  join(', ', $valores );
-        $query .= "WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= "WHERE id = '" . self::$db->escape_string($this->id) . "' "; //self hace referencia a DB
         $query .= " LIMIT 1 ";
 
         $resultado = self::$db->query($query); //este codigo siempre q interactue con la BD
@@ -98,7 +95,7 @@ class ActiveRecord {
     //itera sobre $columnasDB, identificar y unir los atributos de la BD
     public function atributos() {
         $atributos = [];
-        foreach(self::$columnasDB as $columna) {
+        foreach(static::$columnasDB as $columna) {
             if ($columna === 'id') continue;
             $atributos[$columna] = $this->$columna;
         }
@@ -142,45 +139,14 @@ class ActiveRecord {
 
     // validacion
     public static function getErrores() { //el metodo esta estatico no necesitamos nueva instancia en crear propiedad
-        return self::$errores;
+        
+        return static::$errores;
     }
 
     public function validar() {
-        
-        //validar si escribieron si no manda al arreglo de errores
-    if (!$this->titulo) { //this lo q esta en el constructor, los atributos
-        self::$errores[] = "Debes añadir un titulo"; //añade el error al final del arreglo, self lo estatico
-    }
 
-    if (!$this->precio) {
-        self::$errores[] = "El Precio es obligatorio";
-    }
-
-    if (strlen($this->descripcion) < 50) {
-        self::$errores[] = "La Descripcion es obligatoria, y debe tener al menos 50 caracteres";
-    }
-
-    if (!$this->habitaciones) {
-        self::$errores[] = "El numero de habitaciones es obligatorio";
-    }
-
-    if (!$this->wc) {
-        self::$errores[] = "El numero de Baños es obligatorio";
-    }
-
-    if (!$this->estacionamiento) {
-        self::$errores[] = "El numero de estacionamiento es obligatorio";
-    }
-
-    if (!$this->vendedores_id) {
-        self::$errores[] = "Elige un vendedor";
-    }
-
-    if (!$this->imagen) {
-        self::$errores[] = 'la imagen es obligatoria';
-    }
-    
-    return self::$errores;
+    static::$errores = []; //limpiamos el arreglo
+    return static::$errores; //generar nuevos errores
  } 
 
 //lista todas los(registros)
@@ -206,7 +172,7 @@ public static function consultarSQL($query) {
     //iterar los resultados
     $array = [];
     while($registro = $resultado->fetch_assoc()) {
-        $array[] = self::crearObjeto($registro);
+        $array[] = static::crearObjeto($registro);
     }
 
 

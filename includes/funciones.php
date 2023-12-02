@@ -31,3 +31,35 @@ function s($html) : string {
     $s = htmlspecialchars($html);
     return $s;
 }
+
+//validar tipo de contenido
+function validarTipoContenido($tipo) {
+    $tipos = ['vendedor', 'propiedad'];
+
+    return in_array($tipo, $tipos);  //IN_ARRAY BUSCA UN STRING EN UN ARREGLO O UN VALOR
+}
+
+//muestra los mensajes
+function mostrarNotificacion($codigo) {
+    $mensaje = '';
+
+    switch ($codigo) {
+        case 1:
+            $mensaje = 'Creado correctamente';
+            break;
+
+        case 2:
+            $mensaje = 'Actualizado correctamente';
+            break;
+
+        case 3:
+            $mensaje = 'Eliminado correctamente';
+            break;
+        
+        default:
+            $mensaje = false;
+            break;
+    }
+
+    return $mensaje;
+}
