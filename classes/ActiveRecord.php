@@ -157,6 +157,15 @@ public static function all() {
     
 }
 
+//obtiene determinado numero de registros (mostrar en el index de la pagina solo 3 propiedades)
+public static function get($cantidad) {
+    $query = "SELECT * FROM " . static::$tabla . " LIMIT " . $cantidad;
+
+    $resultado = self::consultarSQL($query);
+    return $resultado;
+    
+}
+
 //busca un registro por su id
 public static function find($id) {
     $query = "SELECT * FROM " . static::$tabla . " WHERE id = $id";
@@ -176,7 +185,7 @@ public static function consultarSQL($query) {
     }
 
 
-    //liberar la memoria
+    //liberar la memoria, cerrar la conexion en POO
     $resultado->free();
 
     //retornar los resultados
